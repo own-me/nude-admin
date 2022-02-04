@@ -1,0 +1,4 @@
+node_modules
+prod
+.DS_Store
+typechain
