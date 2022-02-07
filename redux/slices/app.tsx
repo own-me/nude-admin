@@ -2,12 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface AppState {
     isDarkMode: boolean;
-    isReportModalOpen: boolean;
 }
 
 const initialState: AppState = {
-    isDarkMode: window.localStorage.getItem("isDarkMode") === "true",
-    isReportModalOpen: false,
+    isDarkMode: window.localStorage.getItem("isDarkMode") === "true"
 };
 
 export const appSlice = createSlice({
@@ -17,13 +15,10 @@ export const appSlice = createSlice({
         toggleDarkMode: (state: AppState) => {
             state.isDarkMode = !state.isDarkMode;
             window.localStorage.setItem("isDarkMode", (state.isDarkMode).toString());
-        },
-        toggleReportModal: (state: AppState) => {
-            state.isReportModalOpen = !state.isReportModalOpen;
         }
     }
 });
 
-export const { toggleDarkMode, toggleReportModal } = appSlice.actions;
+export const { toggleDarkMode } = appSlice.actions;
 
 export default appSlice.reducer;

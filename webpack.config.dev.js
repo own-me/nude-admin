@@ -11,7 +11,7 @@ module.exports = {
         static: {
             directory: path.join(__dirname, "dev"),
         },
-        port: "80",
+        port: "81",
         open: true,
         historyApiFallback: true,
     },

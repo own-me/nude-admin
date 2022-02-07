@@ -1,11 +1,12 @@
+import GenericTable from "./components/GenericTable";
 import React from "react";
-import Button from "@mui/material/Button";
+import Navbar from "./components/Navbar";
 
 export default function Main() {
     return (
         <div id="main-container">
-            Admin App
-            <Button variant="contained">Hello World</Button>
+            <Navbar />
+            <GenericTable />
         </div>
     );
 }
