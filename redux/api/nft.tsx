@@ -40,7 +40,7 @@ export const nftApi = createApi({
                 url: `nft/admin/reports?page=${page}`,
                 method: "GET",
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                    Authorization: localStorage.getItem("token") && `Bearer ${localStorage.getItem("token")}`
                 }
             })
         })
