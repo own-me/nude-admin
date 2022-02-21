@@ -7,9 +7,12 @@ const NftsPage = memo(() => {
         data: nftData
     } = useGetNftReportsQuery({ page: 0 });
 
+    const headers = Object.keys(nftData?.[0] || []);
+    const rows = nftData || [];
+
     return (
         <div>
-            <GenericTable />
+            <GenericTable headers={headers} rows={rows} />
         </div>
     );
 });

@@ -4,10 +4,6 @@ interface GetNftReportsRequest {
     page: number;
 }
 
-interface GetNftReportsResponse {
-    reports: NftInterface[];
-}
-
 export interface TokenURIInterface {
     title: string;
     description: string;
@@ -35,7 +31,7 @@ export const nftApi = createApi({
     reducerPath: "nftApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
     endpoints: (builder) => ({
-        getNftReports: builder.query<GetNftReportsResponse, GetNftReportsRequest>({
+        getNftReports: builder.query<NftInterface[], GetNftReportsRequest>({
             query: ({ page }) => ({
                 url: `nft/admin/reports?page=${page}`,
                 method: "GET",
