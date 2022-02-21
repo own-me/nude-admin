@@ -7,8 +7,6 @@ const NftsPage = memo(() => {
         data: nftData
     } = useGetNftReportsQuery({ page: 0 });
 
-    console.log(nftData);
-
     return (
         <div>
             <GenericTable />
