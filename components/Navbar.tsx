@@ -1,5 +1,6 @@
 import * as React from "react";
 import { memo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -12,14 +13,38 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import MetamaskButton from "./MetaMaskButton";
 
-const pages = ["NFTs", "Users", "Posts", "Reports"];
+interface NavItem {
+    label: string;
+    path: string;
+}
+
+const navItems: NavItem[] = [
+    {
+        label: "NFTs",
+        path: "/nfts",
+    },
+    {
+        label: "Users",
+        path: "/users",
+    },
+    {
+        label: "Posts",
+        path: "/posts",
+    },
+    {
+        label: "Reports",
+        path: "/reports",
+    }
+];
+
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = memo(() => {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+
+    const navigate = useNavigate();
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -28,8 +53,9 @@ const Navbar = memo(() => {
         setAnchorElUser(event.currentTarget);
     };
 
-    const handleCloseNavMenu = () => {
+    const handleNavClick = (page: string) => {
         setAnchorElNav(null);
+        navigate(page);
     };
 
     const handleCloseUserMenu = () => {
@@ -72,14 +98,14 @@ const Navbar = memo(() => {
                                 horizontal: "left",
                             }}
                             open={Boolean(anchorElNav)}
-                            onClose={handleCloseNavMenu}
+                            onClose={handleNavClick}
                             sx={{
                                 display: { xs: "block", md: "none" },
                             }}
                         >
-                            {pages.map((page) => (
-                                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                    <Typography textAlign="center">{page}</Typography>
+                            {navItems.map((navItem, index) => (
+                                <MenuItem key={index} onClick={() => handleNavClick(navItem.path)}>
+                                    <Typography textAlign="center">{navItem.label}</Typography>
                                 </MenuItem>
                             ))}
                         </Menu>
@@ -93,13 +119,13 @@ const Navbar = memo(() => {
                         Own Me Inc. | Admin
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                        {pages.map((page) => (
+                        {navItems.map((navItem, index) => (
                             <Button
-                                key={page}
-                                onClick={handleCloseNavMenu}
+                                key={index}
+                                onClick={() => handleNavClick(navItem.path)}
                                 sx={{ my: 2, color: "white", display: "block" }}
                             >
-                                {page}
+                                {navItem.label}
                             </Button>
                         ))}
                     </Box>
@@ -132,7 +158,6 @@ const Navbar = memo(() => {
                             ))}
                         </Menu>
                     </Box>
-                    <MetamaskButton />
                 </Toolbar>
             </Container>
         </AppBar>

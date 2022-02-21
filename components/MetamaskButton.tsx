@@ -5,6 +5,7 @@ import { usePostAuthMutation } from "../redux/api/auth";
 import useWallet from "../hooks/useWallet";
 import metamaskLogo from "../media/metamask.svg";
 import { Box, Button, Typography } from "@mui/material";
+import { setIsLoggedIn } from "../redux/slices/app";
 
 export const MetamaskButton = memo(() => {
     const dispatch = useAppDispatch();
@@ -55,13 +56,14 @@ export const MetamaskButton = memo(() => {
     useEffect(() => {
         if (isPostAuthSuccess && postAuthData && postAuthData.token) {
             window.localStorage.setItem("token", postAuthData.token);
+            dispatch(setIsLoggedIn(true));
         }
     }, [dispatch, isPostAuthSuccess, postAuthData]);
 
     return (
         <Box onSubmit={handleSubmit}>
             <Typography>{isPostLoginError && postLoginError?.data?.error}</Typography>
-            <Button onClick={handleSubmit}><img src={metamaskLogo} /></Button>
+            <Button variant="outlined" onClick={handleSubmit}><img src={metamaskLogo} /></Button>
         </Box>
     );
 });

@@ -2,10 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 
 interface AppState {
     isDarkMode: boolean;
+    isLoggedIn: boolean;
 }
 
 const initialState: AppState = {
-    isDarkMode: window.localStorage.getItem("isDarkMode") === "true"
+    isDarkMode: window.localStorage.getItem("isDarkMode") === "true",
+    isLoggedIn: false
 };
 
 export const appSlice = createSlice({
@@ -15,10 +17,14 @@ export const appSlice = createSlice({
         toggleDarkMode: (state: AppState) => {
             state.isDarkMode = !state.isDarkMode;
             window.localStorage.setItem("isDarkMode", (state.isDarkMode).toString());
+        },
+        setIsLoggedIn: (state: AppState, action: { payload: boolean }) => {
+            console.log(action.payload);
+            state.isLoggedIn = action.payload;
         }
     }
 });
 
-export const { toggleDarkMode } = appSlice.actions;
+export const { toggleDarkMode, setIsLoggedIn } = appSlice.actions;
 
 export default appSlice.reducer;
