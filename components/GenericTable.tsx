@@ -11,9 +11,10 @@ import Paper from "@mui/material/Paper";
 interface GenericTableProps {
     headers: string[];
     rows: any[];
+    onRowClick?: (row: any) => void;
 }
 
-const GenericTable = memo(({ headers, rows }: GenericTableProps) => {
+const GenericTable = memo(({ headers, rows, onRowClick }: GenericTableProps) => {
     return (
         <TableContainer component={Paper}>
             <Table aria-label="simple table">
@@ -26,10 +27,9 @@ const GenericTable = memo(({ headers, rows }: GenericTableProps) => {
                 </TableHead>
                 <TableBody>
                     {rows.map((row, index) => (
-                        <TableRow key={index}>
+                        <TableRow key={index} onClick={() => onRowClick(row)}>
                             {
                                 Object.values(row).map((value, index) => {
-                                    console.log(value);
                                     return <TableCell align="right" key={index}>{value}</TableCell>;
                                 })
                             }

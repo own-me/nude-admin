@@ -1,5 +1,5 @@
 import GenericTable from "../../components/GenericTable";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { useGetNftReportsQuery } from "../../redux/api/nft";
 
 const NftsPage = memo(() => {
@@ -10,9 +10,17 @@ const NftsPage = memo(() => {
     const headers = Object.keys(nftData?.[0] || []);
     const rows = nftData || [];
 
+    const onRowClick = useCallback((row: any) => {
+        console.log(row);
+    }, []);
+
     return (
         <div>
-            <GenericTable headers={headers} rows={rows} />
+            <GenericTable
+                headers={headers} 
+                rows={rows}
+                onRowClick={onRowClick}
+            />
         </div>
     );
 });
