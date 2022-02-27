@@ -9,7 +9,7 @@ const NftPage = memo(() => {
 
     const {
         data: nftData
-    } = useGetNftQuery({ tokenId: location?.pathname?.split("/")[2] });
+    } = useGetNftQuery({ tokenId: Number(location?.pathname?.split("/")[2]) });
 
     return (
         <div>
