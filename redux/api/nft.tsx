@@ -4,6 +4,10 @@ interface GetNftReportsRequest {
     page: number;
 }
 
+interface GetNftRequest {
+    tokenId: number;
+}
+
 export interface TokenURIInterface {
     title: string;
     description: string;
@@ -36,7 +40,16 @@ export const nftApi = createApi({
                 url: `nft/admin/reports?page=${page}`,
                 method: "GET",
                 headers: {
-                    Authorization: localStorage.getItem("token") && `Bearer ${localStorage.getItem("token")}`
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
+        }),
+        getNft: builder.query<NftInterface, GetNftRequest>({
+            query: ({ tokenId }) => ({
+                url: `nft/admin/${tokenId}`,
+                method: "GET",
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
         })
@@ -45,4 +58,5 @@ export const nftApi = createApi({
 
 export const {
     useGetNftReportsQuery,
+    useGetNftQuery
 } = nftApi;

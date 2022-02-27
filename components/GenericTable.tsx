@@ -27,7 +27,7 @@ const GenericTable = memo(({ headers, rows, onRowClick }: GenericTableProps) => 
                 </TableHead>
                 <TableBody>
                     {rows.map((row, index) => (
-                        <TableRow key={index} onClick={() => onRowClick(row)}>
+                        <TableRow key={index} onClick={() => onRowClick(row)} hover>
                             {
                                 Object.values(row).map((value, index) => {
                                     return <TableCell align="right" key={index}>{value}</TableCell>;

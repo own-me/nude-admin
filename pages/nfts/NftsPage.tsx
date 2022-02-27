@@ -1,8 +1,11 @@
 import GenericTable from "../../components/GenericTable";
 import React, { memo, useCallback } from "react";
 import { useGetNftReportsQuery } from "../../redux/api/nft";
+import { useNavigate } from "react-router-dom";
 
 const NftsPage = memo(() => {
+    const navigate = useNavigate();
+
     const {
         data: nftData
     } = useGetNftReportsQuery({ page: 0 });
@@ -12,12 +15,13 @@ const NftsPage = memo(() => {
 
     const onRowClick = useCallback((row: any) => {
         console.log(row);
-    }, []);
+        navigate(`/nft/${row.tokenId}`);
+    }, [navigate]);
 
     return (
         <div>
             <GenericTable
-                headers={headers} 
+                headers={headers}
                 rows={rows}
                 onRowClick={onRowClick}
             />

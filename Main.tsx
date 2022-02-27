@@ -4,6 +4,7 @@ import { useAppSelector } from "./redux/hooks";
 import Navbar from "./components/Navbar";
 import LoginPage from "./pages/login/LoginPage";
 import NftsPage from "./pages/nfts/NftsPage";
+import NftPage from "./pages/nft/NftPage";
 
 export default function Main() {
     const isLoggedIn = useAppSelector(state => state.app.isLoggedIn);
@@ -18,6 +19,9 @@ export default function Main() {
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/nfts" element={
                     isLoggedIn ? <NftsPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                } />
+                <Route path="/nft/:tokenId" element={
+                    isLoggedIn ? <NftPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
             </Routes>
         </div>
