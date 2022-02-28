@@ -8,8 +8,8 @@ import Main from "./Main";
 
 const theme = createTheme({
     palette: {
-        mode: "dark",
-    },
+        mode: "dark"
+    }
 });
 
 function App() {

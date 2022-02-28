@@ -14,7 +14,6 @@ const NftsPage = memo(() => {
     const rows = nftData || [];
 
     const onRowClick = useCallback((row: any) => {
-        console.log(row);
         navigate(`/nft/${row.tokenId}`);
     }, [navigate]);
 
