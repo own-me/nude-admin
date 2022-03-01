@@ -4,6 +4,7 @@ import appReducer from "./slices/app";
 import { loginApi } from "./api/login";
 import { authApi } from "./api/auth";
 import { nftApi } from "./api/nft";
+import { userApi } from "./api/users";
 
 export const store = configureStore({
     reducer: {
@@ -11,11 +12,13 @@ export const store = configureStore({
         [loginApi.reducerPath]: loginApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [nftApi.reducerPath]: nftApi.reducer,
+        [userApi.reducerPath]: userApi.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
         loginApi.middleware,
         authApi.middleware,
-        nftApi.middleware
+        nftApi.middleware,
+        userApi.middleware
     ),
 });
 
