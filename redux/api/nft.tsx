@@ -8,6 +8,11 @@ interface GetNftRequest {
     tokenId: number;
 }
 
+interface BanNftRequest {
+    tokenId: number;
+    reason: string;
+}
+
 export interface TokenURIInterface {
     title: string;
     description: string;
@@ -52,11 +57,26 @@ export const nftApi = createApi({
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
+        }),
+        banNft: builder.mutation<null, BanNftRequest>({
+            query: ({ adminAddress, tokenId, reason }) => ({
+                url: "nft/admin/ban",
+                method: "POST",
+                body: {
+                    adminAddress,
+                    tokenId,
+                    reason
+                },
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
         })
     })
 });
 
 export const {
     useGetNftReportsQuery,
-    useGetNftQuery
+    useGetNftQuery,
+    useBanNftMutation
 } = nftApi;

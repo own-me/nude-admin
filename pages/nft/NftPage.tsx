@@ -1,24 +1,30 @@
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, Modal, Typography } from "@mui/material";
-import React, { memo, useCallback, useState } from "react";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useGetNftQuery } from "../../redux/api/nft";
+import { useBanNftMutation, useGetNftQuery } from "../../redux/api/nft";
 
 const NftPage = memo(() => {
     const location = useLocation();
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isBanConfirmed, setIsBanConfirmed] = useState<boolean>(false);
 
+    const tokenId = useMemo(() => Number(location?.pathname?.split("/")[2]), [location]);
+
     const {
         data: nftData
-    } = useGetNftQuery({ tokenId: Number(location?.pathname?.split("/")[2]) });
+    } = useGetNftQuery({ tokenId });
+
+    const [postBanNft, {
+        isSuccess: isPostBanNftSuccess,
+    }] = useBanNftMutation();
 
     const openBanModal = useCallback(() => {
         setIsModalOpen(true);
     }, []);
 
     const confirmBan = useCallback(() => {
-        console.log("banned");
-    }, []);
+        postBanNft({ tokenId, reason: "banned" });
+    }, [postBanNft, tokenId]);
 
     return (
         <>

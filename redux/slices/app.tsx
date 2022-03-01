@@ -19,7 +19,6 @@ export const appSlice = createSlice({
             window.localStorage.setItem("isDarkMode", (state.isDarkMode).toString());
         },
         setIsLoggedIn: (state: AppState, action: { payload: boolean }) => {
-            console.log(action.payload);
             state.isLoggedIn = action.payload;
         }
     }
