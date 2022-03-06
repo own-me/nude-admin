@@ -6,9 +6,12 @@ import useWallet from "../hooks/useWallet";
 import metamaskLogo from "../media/metamask.svg";
 import { Box, Button, Typography } from "@mui/material";
 import { setIsLoggedIn } from "../redux/slices/app";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export const MetamaskButton = memo(() => {
     const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const { address, signer } = useWallet();
 
@@ -37,28 +40,31 @@ export const MetamaskButton = memo(() => {
 
     useEffect(() => {
         if (isPostLoginSuccess && postLoginData) {
-            console.log("postLoginData", postLoginData);
             if (postLoginData.nonce) {
                 window.localStorage.removeItem("token");
                 signer.signMessage(postLoginData.nonce).then(signature => {
                     postAuth({ address, signature, nonce: postLoginData.nonce });
                 });
+            } else {
+                navigate(location?.state?.from || "/");
+                dispatch(setIsLoggedIn(true));
             }
         }
-    }, [postLoginData, isPostLoginSuccess, signer, postAuth, address, dispatch]);
+    }, [postLoginData, isPostLoginSuccess, signer, postAuth, address, dispatch, navigate, location?.state?.from]);
+
+    useEffect(() => {
+        if (isPostAuthSuccess && postAuthData && postAuthData.token) {
+            window.localStorage.setItem("token", postAuthData.token);
+            navigate(location?.state?.from || "/");
+            dispatch(setIsLoggedIn(true));
+        }
+    }, [dispatch, isPostAuthSuccess, location?.state?.from, navigate, postAuthData]);
 
     useEffect(() => {
         if (isPostLoginError) {
             window.localStorage.removeItem("token");
         }
     }, [isPostLoginError]);
-
-    useEffect(() => {
-        if (isPostAuthSuccess && postAuthData && postAuthData.token) {
-            window.localStorage.setItem("token", postAuthData.token);
-            dispatch(setIsLoggedIn(true));
-        }
-    }, [dispatch, isPostAuthSuccess, postAuthData]);
 
     return (
         <Box onSubmit={handleSubmit}>
