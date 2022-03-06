@@ -5,6 +5,7 @@ import { loginApi } from "./api/login";
 import { authApi } from "./api/auth";
 import { nftApi } from "./api/nft";
 import { userApi } from "./api/users";
+import { postsApi } from "./api/posts";
 
 export const store = configureStore({
     reducer: {
@@ -12,13 +13,15 @@ export const store = configureStore({
         [loginApi.reducerPath]: loginApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [nftApi.reducerPath]: nftApi.reducer,
-        [userApi.reducerPath]: userApi.reducer
+        [userApi.reducerPath]: userApi.reducer,
+        [postsApi.reducerPath]: postsApi.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(
         loginApi.middleware,
         authApi.middleware,
         nftApi.middleware,
-        userApi.middleware
+        userApi.middleware,
+        postsApi.middleware
     ),
 });
 

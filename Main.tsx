@@ -6,6 +6,7 @@ import LoginPage from "./pages/login/LoginPage";
 import NftsPage from "./pages/nfts/NftsPage";
 import NftPage from "./pages/nft/NftPage";
 import UsersPage from "./pages/users/UsersPage";
+import PostsPage from "./pages/posts/PostsPage";
 
 export default function Main() {
     const isLoggedIn = useAppSelector(state => state.app.isLoggedIn);
@@ -26,6 +27,9 @@ export default function Main() {
                 } />
                 <Route path="/users" element={
                     isLoggedIn ? <UsersPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                } />
+                <Route path="/posts" element={
+                    isLoggedIn ? <PostsPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
             </Routes>
         </div>

@@ -42,7 +42,7 @@ export const nftApi = createApi({
     endpoints: (builder) => ({
         getNftReports: builder.query<NftInterface[], GetNftReportsRequest>({
             query: ({ page }) => ({
-                url: `nft/admin/reports?page=${page}`,
+                url: `nft/admin/reports/?page=${page}`,
                 method: "GET",
                 headers: {
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
@@ -59,11 +59,10 @@ export const nftApi = createApi({
             })
         }),
         banNft: builder.mutation<null, BanNftRequest>({
-            query: ({ adminAddress, tokenId, reason }) => ({
+            query: ({ tokenId, reason }) => ({
                 url: "nft/admin/ban",
                 method: "POST",
                 body: {
-                    adminAddress,
                     tokenId,
                     reason
                 },
