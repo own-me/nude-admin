@@ -1,6 +1,6 @@
 import * as React from "react";
-import { memo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { memo, useState, useMemo } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -10,31 +10,52 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 interface NavItem {
     label: string;
     path: string;
+    children?: string[];
 }
 
 const navItems: NavItem[] = [
     {
+        label: "Home",
+        path: "/",
+        children: [
+            "/login",
+        ]
+    },
+    {
         label: "NFTs",
         path: "/nfts",
+        children: [
+            "/nft"
+        ]
     },
     {
         label: "Users",
         path: "/users",
+        children: [
+            "/user"
+        ]
     },
     {
         label: "Posts",
         path: "/posts",
+        children: [
+            "/post"
+        ]
     },
     {
         label: "Reports",
         path: "/reports",
+        children: [
+            "/report"
+        ]
     }
 ];
 
@@ -45,6 +66,17 @@ const Navbar = memo(() => {
     const [anchorElUser, setAnchorElUser] = useState(null);
 
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const activeNavTab = useMemo(() => {
+        const path = `/${location.pathname.split("/")[1]}`;
+        const item = navItems.find(navItem => {
+            if (navItem.path === path || navItem.children.includes(path)) {
+                return navItem;
+            }
+        });
+        return item?.path;
+    }, [location.pathname]);
 
     const handleOpenNavMenu = (event) => {
         setAnchorElNav(event.currentTarget);
@@ -119,15 +151,17 @@ const Navbar = memo(() => {
                         Own Me Inc. | Admin
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                        {navItems.map((navItem, index) => (
-                            <Button
-                                key={index}
-                                onClick={() => handleNavClick(navItem.path)}
-                                sx={{ my: 2, color: "white", display: "block" }}
-                            >
-                                {navItem.label}
-                            </Button>
-                        ))}
+                        <Tabs value={activeNavTab}>
+                            {navItems.map((navItem, index) => (
+                                <Tab
+                                    key={index}
+                                    label={navItem.label}
+                                    value={navItem.path}
+                                    onClick={() => handleNavClick(navItem.path)}
+                                    sx={{ my: 2, color: "white", display: "block" }}
+                                />
+                            ))}
+                        </Tabs>
                     </Box>
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Open settings">
