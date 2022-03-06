@@ -29,10 +29,20 @@ export const userApi = createApi({
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
+        }),
+        getUser: builder.query<User, null>({
+            query: () => ({
+                url: "user/admin/user",
+                method: "GET",
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
         })
     })
 });
 
 export const {
-    useGetUsersQuery
+    useGetUsersQuery,
+    useGetUserQuery
 } = userApi;
