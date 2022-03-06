@@ -30,6 +30,9 @@ const GenericTable = memo(({ headers, rows, onRowClick }: GenericTableProps) => 
                         <TableRow key={index} onClick={() => onRowClick(row)} hover>
                             {
                                 Object.values(row).map((value, index) => {
+                                    if (typeof value === "object") {
+                                        return <TableCell key={index}>{JSON.stringify(value)}</TableCell>;
+                                    }
                                     return <TableCell align="right" key={index}>{value}</TableCell>;
                                 })
                             }
