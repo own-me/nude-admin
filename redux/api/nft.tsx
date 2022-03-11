@@ -20,6 +20,14 @@ export interface TokenURIInterface {
     hashtags: string[];
 }
 
+interface NftBanRecord {
+    id: number;
+    tokenId: number;
+    reason: string;
+    adminAddress: string;
+    dateBanned: string;
+}
+
 export interface NftInterface {
     tokenId: number;
     recipient: string;
@@ -34,6 +42,7 @@ export interface NftInterface {
     isLiked?: boolean;
     likesCount: number;
     viewsCount: number;
+    banRecords?: NftBanRecord[];
 }
 
 export const nftApi = createApi({

@@ -59,7 +59,7 @@ const navItems: NavItem[] = [
     }
 ];
 
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const settings = ["Profile", "Logout"];
 
 const Navbar = memo(() => {
     const [anchorElNav, setAnchorElNav] = useState(null);
