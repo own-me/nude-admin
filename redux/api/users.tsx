@@ -17,6 +17,10 @@ interface User {
     error?: string;
 }
 
+interface GetUserRequest {
+    userAddress: string;
+}
+
 export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
@@ -30,9 +34,9 @@ export const userApi = createApi({
                 }
             })
         }),
-        getUser: builder.query<User, null>({
-            query: () => ({
-                url: "user/admin/user",
+        getUser: builder.query<User, GetUserRequest>({
+            query: ({ userAddress }) => ({
+                url: `user/admin/user/${userAddress}`,
                 method: "GET",
                 headers: {
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
