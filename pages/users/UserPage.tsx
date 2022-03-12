@@ -1,8 +1,9 @@
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, Modal, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, FormControlLabel, FormGroup, Grid, Modal, Typography } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useBanUserMutation } from "../../redux/api/users";
 import { useGetUserQuery } from "../../redux/api/users";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const UserPage = memo(() => {
     const location = useLocation();
@@ -40,10 +41,25 @@ const UserPage = memo(() => {
                             }} />
                         </Box>
                     </Grid>
-                    <Grid item xs={8}>
+                    <Grid item xs={8} mt={3}>
                         <Typography variant="h2">{userData?.name}</Typography>
+                        <Typography variant="button" mr={2}>{userData?.address}</Typography>
+                        <Chip
+                            icon={<OpenInNewIcon />}
+                            label="Polyscan"
+                            component="a"
+                            href={`https://mumbai.polygonscan.com/address/${userData?.address}`}
+                            target="_blank"
+                            clickable
+                        />
+                        <Box mt={3} mb={3}>
+                            <Chip
+                                label={userData?.banResults?.length > 0 ? "BANNED" : "Good Standing"}
+                                color={userData?.banResults?.length > 0 ? "error" : "success"}
+                                variant="outlined"
+                            />
+                        </Box>
                         <Typography variant="subtitle1">{userData?.bio}</Typography>
-                        <Typography variant="button">{userData?.address}</Typography>
                         <Box mt={3}>
                             <Button variant="contained" color="error" onClick={openBanModal}>Ban</Button>
                         </Box>

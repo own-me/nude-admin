@@ -13,6 +13,7 @@ interface User {
     link?: string;
     isFollowing?: boolean;
     following?: any[];
+    banResults: any[];
     message?: string;
     error?: string;
 }
