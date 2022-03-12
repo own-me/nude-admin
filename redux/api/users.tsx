@@ -21,6 +21,16 @@ interface GetUserRequest {
     userAddress: string;
 }
 
+interface BanUserRequest {
+    userAddress: string;
+    reason: string;
+}
+
+interface BanUserResponse {
+    message?: string;
+    error?: string;
+}
+
 export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
@@ -42,11 +52,25 @@ export const userApi = createApi({
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
+        }),
+        banUser: builder.mutation<BanUserResponse, BanUserRequest>({
+            query: ({ userAddress, reason }) => ({
+                url: "user/admin/ban",
+                method: "POST",
+                body: {
+                    userAddress,
+                    reason
+                },
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
         })
     })
 });
 
 export const {
     useGetUsersQuery,
-    useGetUserQuery
+    useGetUserQuery,
+    useBanUserMutation
 } = userApi;

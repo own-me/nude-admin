@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, Modal, Typography } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useBanNftMutation } from "../../redux/api/nft";
+import { useBanUserMutation } from "../../redux/api/users";
 import { useGetUserQuery } from "../../redux/api/users";
 
 const UserPage = memo(() => {
@@ -15,17 +15,17 @@ const UserPage = memo(() => {
         data: userData
     } = useGetUserQuery({ userAddress });
 
-    const [postBanNft, {
+    const [postBanUser, {
         isSuccess: isPostBanNftSuccess,
-    }] = useBanNftMutation();
+    }] = useBanUserMutation();
 
     const openBanModal = useCallback(() => {
         setIsModalOpen(true);
     }, []);
 
     const confirmBan = useCallback(() => {
-        postBanNft({ tokenId: Number(userAddress), reason: "banned" });
-    }, [postBanNft, userAddress]);
+        postBanUser({ userAddress, reason: "banned" });
+    }, [postBanUser, userAddress]);
 
     return (
         <>
@@ -67,7 +67,7 @@ const UserPage = memo(() => {
                     p: 4
                 }}>
                     <Typography variant="h6" component="h2">
-                        Are you sure you want to ban this NFT?
+                        Are you sure you want to ban: {userData?.name}?
                     </Typography>
                     <FormGroup>
                         <FormControlLabel control={
