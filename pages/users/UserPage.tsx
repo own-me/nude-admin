@@ -1,32 +1,57 @@
-import { Box, Button, Checkbox, Chip, FormControlLabel, FormGroup, Grid, Link, Modal, Stack, Typography } from "@mui/material";
-import React, { memo, useCallback, useMemo, useState } from "react";
+import { Box, Button, Chip, Grid, Link, Stack, Typography } from "@mui/material";
+import React, { memo, useCallback, useMemo, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useBanUserMutation } from "../../redux/api/users";
+import { useBanUserMutation, useUnbanUserMutation } from "../../redux/api/users";
 import { useGetUserQuery } from "../../redux/api/users";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import ConfirmModal from "../../components/ConfirmModal";
 
 const UserPage = memo(() => {
     const location = useLocation();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [isBanConfirmed, setIsBanConfirmed] = useState<boolean>(false);
+    const [isBanModalOpen, setBanModalOpen] = useState<boolean>(false);
+    const [isUnbanModalOpen, setUnbanModalOpen] = useState<boolean>(false);
 
     const userAddress = useMemo(() => location?.pathname?.split("/")[2], [location]);
 
     const {
-        data: userData
+        data: userData,
+        refetch: refetchUserData
     } = useGetUserQuery({ userAddress });
 
-    const [postBanUser, {
-        isSuccess: isPostBanNftSuccess,
-    }] = useBanUserMutation();
+    const [postBanUser, { isSuccess: isBanUserSuccess, isError: isBanUserError }] = useBanUserMutation();
+    const [postUnbanUser, { isSuccess: isUnbanUserSuccess, isError: isUnbanUserError }] = useUnbanUserMutation();
+
+    useEffect(() => {
+        if (isBanUserSuccess || isUnbanUserSuccess || isBanUserError || isUnbanUserError) {
+            refetchUserData();
+            setBanModalOpen(false);
+            setUnbanModalOpen(false);
+        }
+    }, [isBanUserError, isBanUserSuccess, isUnbanUserError, isUnbanUserSuccess, refetchUserData]);
 
     const openBanModal = useCallback(() => {
-        setIsModalOpen(true);
+        setBanModalOpen(true);
+    }, []);
+
+    const openUnbanModal = useCallback(() => {
+        setUnbanModalOpen(true);
+    }, []);
+
+    const cancelBan = useCallback(() => {
+        setBanModalOpen(false);
+    }, []);
+
+    const cancelUnban = useCallback(() => {
+        setUnbanModalOpen(false);
     }, []);
 
     const confirmBan = useCallback(() => {
         postBanUser({ userAddress, reason: "banned" });
     }, [postBanUser, userAddress]);
+
+    const confirmUnban = useCallback(() => {
+        postUnbanUser({ userAddress });
+    }, [postUnbanUser, userAddress]);
 
     return (
         <>
@@ -79,7 +104,7 @@ const UserPage = memo(() => {
                             <Box mt={3}>
                                 {
                                     userData?.banResults?.length > 0 ?
-                                        <Button variant="contained" color="warning" onClick={openBanModal}>Unban</Button> :
+                                        <Button variant="contained" color="warning" onClick={openUnbanModal}>Unban</Button> :
                                         <Button variant="contained" color="error" onClick={openBanModal}>Ban</Button>
                                 }
                             </Box>
@@ -87,41 +112,18 @@ const UserPage = memo(() => {
                     </Grid>
                 </Grid>
             </Box>
-            <Modal
-                open={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            >
-                <Box sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: 400,
-                    bgcolor: "background.paper",
-                    border: "2px solid #000",
-                    color: "text.primary",
-                    boxShadow: 24,
-                    p: 4
-                }}>
-                    <Typography variant="h6" component="h2">
-                        Are you sure you want to ban: {userData?.name}?
-                    </Typography>
-                    <FormGroup>
-                        <FormControlLabel
-                            label="I confirm."
-                            control={
-                                <Checkbox
-                                    checked={isBanConfirmed}
-                                    onClick={() => setIsBanConfirmed(!isBanConfirmed)}
-                                />
-                            }
-                        />
-                        <Box mt={3}>
-                            <Button variant="contained" color="error" onClick={confirmBan} disabled={!isBanConfirmed}>Ban</Button>
-                        </Box>
-                    </FormGroup>
-                </Box>
-            </Modal>
+            <ConfirmModal
+                isOpen={isBanModalOpen}
+                title={`Are you sure you want to ban: ${userData?.name}?`}
+                onClose={cancelBan}
+                onConfirm={confirmBan}
+            />
+            <ConfirmModal
+                isOpen={isUnbanModalOpen}
+                title="Do you want to unban this NFT?"
+                onClose={cancelUnban}
+                onConfirm={confirmUnban}
+            />
         </>
     );
 });

@@ -13,6 +13,10 @@ interface BanNftRequest {
     reason: string;
 }
 
+interface UnbanNftRequest {
+    tokenId: number;
+}
+
 export interface TokenURIInterface {
     title: string;
     description: string;
@@ -83,13 +87,12 @@ export const nftApi = createApi({
                 }
             })
         }),
-        unbanNft: builder.mutation<null, BanNftRequest>({
-            query: ({ tokenId, reason }) => ({
+        unbanNft: builder.mutation<null, UnbanNftRequest>({
+            query: ({ tokenId }) => ({
                 url: "nft/admin/unban",
                 method: "POST",
                 body: {
-                    tokenId,
-                    reason
+                    tokenId
                 },
                 headers: {
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })

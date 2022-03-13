@@ -34,6 +34,15 @@ interface BanUserResponse {
     error?: string;
 }
 
+interface UnbanUserRequest {
+    userAddress: string;
+}
+
+interface UnbanUserResponse {
+    message?: string;
+    error?: string;
+}
+
 export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
@@ -68,6 +77,18 @@ export const userApi = createApi({
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
+        }),
+        unbanUser: builder.mutation<UnbanUserResponse, UnbanUserRequest>({
+            query: ({ userAddress }) => ({
+                url: "user/admin/unban",
+                method: "POST",
+                body: {
+                    userAddress
+                },
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
         })
     })
 });
@@ -75,5 +96,6 @@ export const userApi = createApi({
 export const {
     useGetUsersQuery,
     useGetUserQuery,
-    useBanUserMutation
+    useBanUserMutation,
+    useUnbanUserMutation
 } = userApi;

@@ -17,8 +17,8 @@ const NftPage = memo(() => {
         refetch: refetchNftData
     } = useGetNftQuery({ tokenId });
 
-    const [postBanNft, { isSuccess: isBanNftSuccess, isError: isBanNftError}] = useBanNftMutation();
-    const [postUnbanNft, { isSuccess: isUnbanNftSuccess, isError: isUnbanNftError}] = useUnbanNftMutation();
+    const [postBanNft, { isSuccess: isBanNftSuccess, isError: isBanNftError }] = useBanNftMutation();
+    const [postUnbanNft, { isSuccess: isUnbanNftSuccess, isError: isUnbanNftError }] = useUnbanNftMutation();
 
     useEffect(() => {
         if (isBanNftSuccess || isUnbanNftSuccess || isBanNftError || isUnbanNftError) {
@@ -49,7 +49,7 @@ const NftPage = memo(() => {
     }, [postBanNft, tokenId]);
 
     const confirmUnban = useCallback(() => {
-        postUnbanNft({ tokenId, reason: "unbanned" });
+        postUnbanNft({ tokenId });
     }, [postUnbanNft, tokenId]);
 
     return (
