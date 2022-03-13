@@ -20,29 +20,6 @@ interface User {
     error?: string;
 }
 
-interface GetUserRequest {
-    userAddress: string;
-}
-
-interface BanUserRequest {
-    userAddress: string;
-    reason: string;
-}
-
-interface BanUserResponse {
-    message?: string;
-    error?: string;
-}
-
-interface UnbanUserRequest {
-    userAddress: string;
-}
-
-interface UnbanUserResponse {
-    message?: string;
-    error?: string;
-}
-
 export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
@@ -56,7 +33,7 @@ export const userApi = createApi({
                 }
             })
         }),
-        getUser: builder.query<User, GetUserRequest>({
+        getUser: builder.query<User, { userAddress: string }>({
             query: ({ userAddress }) => ({
                 url: `user/admin/user/${userAddress}`,
                 method: "GET",
@@ -65,7 +42,7 @@ export const userApi = createApi({
                 }
             })
         }),
-        banUser: builder.mutation<BanUserResponse, BanUserRequest>({
+        banUser: builder.mutation<null, { userAddress: string; reason: string; }>({
             query: ({ userAddress, reason }) => ({
                 url: "user/admin/ban",
                 method: "POST",
@@ -78,7 +55,7 @@ export const userApi = createApi({
                 }
             })
         }),
-        unbanUser: builder.mutation<UnbanUserResponse, UnbanUserRequest>({
+        unbanUser: builder.mutation<null, { userAddress: string }>({
             query: ({ userAddress }) => ({
                 url: "user/admin/unban",
                 method: "POST",

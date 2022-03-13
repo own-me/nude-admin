@@ -15,29 +15,11 @@ export interface Post {
     isLiked: boolean;
 }
 
-interface GetPostRequest {
-    postId: string;
-}
-
-interface GetUserPostsRequest {
-    userAddress: string;
-}
-
-interface GetPostsRequest {
-    page: number;
-}
-
-interface GetPostsResponse {
-    message?: string;
-    error?: string;
-    posts?: Post[];
-}
-
 export const postsApi = createApi({
     reducerPath: "postsApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
     endpoints: (builder) => ({
-        getPost: builder.query<Post, GetPostRequest>({
+        getPost: builder.query<Post, { postId: string }>({
             query: ({ postId }) => ({
                 url: `posts/${postId}`,
                 method: "GET",
@@ -46,7 +28,7 @@ export const postsApi = createApi({
                 }
             })
         }),
-        getPosts: builder.query<GetPostsResponse, GetPostsRequest>({
+        getPosts: builder.query<Post[], { page: number }>({
             query: ({ page }) => ({
                 url: `posts/admin/posts?page=${page}`,
                 method: "GET",
@@ -55,7 +37,7 @@ export const postsApi = createApi({
                 }
             })
         }),
-        getUserPosts: builder.query<Post[], GetUserPostsRequest>({
+        getUserPosts: builder.query<Post[], { userAddress: string }>({
             query: ({ userAddress }) => ({
                 url: `posts/user/${userAddress}`,
                 method: "GET",
