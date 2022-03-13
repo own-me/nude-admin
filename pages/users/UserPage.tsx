@@ -1,8 +1,8 @@
 import { Box, Button, Chip, Grid, Link, Stack, Typography } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useBanUserMutation, useUnbanUserMutation } from "../../redux/api/users";
-import { useGetUserQuery } from "../../redux/api/users";
+import { useBanUserMutation, useUnbanUserMutation } from "../../redux/api/user";
+import { useGetUserQuery } from "../../redux/api/user";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ConfirmModal from "../../components/ConfirmModal";
 

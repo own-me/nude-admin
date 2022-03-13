@@ -4,7 +4,7 @@ import appReducer from "./slices/app";
 import { loginApi } from "./api/login";
 import { authApi } from "./api/auth";
 import { nftApi } from "./api/nft";
-import { userApi } from "./api/users";
+import { userApi } from "./api/user";
 import { postsApi } from "./api/posts";
 
 export const store = configureStore({
