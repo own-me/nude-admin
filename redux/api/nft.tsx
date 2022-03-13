@@ -38,11 +38,14 @@ export interface NftInterface {
     blockNumber: number;
     tokenURI: TokenURIInterface;
     price: string;
-    ownerName?: string;
-    isLiked?: boolean;
+}
+
+interface GetNftResponse {
+    nft: NftInterface;
+    banRecords?: NftBanRecord[];
+    owner?: any;
     likesCount: number;
     viewsCount: number;
-    banRecords?: NftBanRecord[];
 }
 
 export const nftApi = createApi({
@@ -58,7 +61,7 @@ export const nftApi = createApi({
                 }
             })
         }),
-        getNft: builder.query<NftInterface, GetNftRequest>({
+        getNft: builder.query<GetNftResponse, GetNftRequest>({
             query: ({ tokenId }) => ({
                 url: `nft/admin/${tokenId}`,
                 method: "GET",

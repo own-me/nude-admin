@@ -1,7 +1,8 @@
-import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, Modal, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, FormControlLabel, FormGroup, Grid, Modal, Stack, Typography, Link } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useBanNftMutation, useGetNftQuery } from "../../redux/api/nft";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 
 const NftPage = memo(() => {
     const location = useLocation();
@@ -41,7 +42,30 @@ const NftPage = memo(() => {
                     </Grid>
                     <Grid item xs={8}>
                         <Typography variant="h2">{nftData?.nft.tokenURI?.title}</Typography>
-                        <Typography variant="subtitle1">{nftData?.nft.tokenURI?.description}</Typography>
+                        <Stack direction="row" spacing={1} mt={3} mb={3}>
+                            <Chip
+                                icon={<OpenInNewIcon />}
+                                label="Polyscan"
+                                component="a"
+                                href={`https://mumbai.polygonscan.com/tx/${nftData?.nft?.transactionHash}`}
+                                target="_blank"
+                                clickable
+                            />
+                            <Chip
+                                label={nftData?.banRecords?.length > 0 ? "BANNED" : "Good Standing"}
+                                color={nftData?.banRecords?.length > 0 ? "error" : "success"}
+                                variant="outlined"
+                            />
+                        </Stack>
+                        <Typography variant="subtitle1" mb={2}>
+                            Creator: <Link href={`/user/${nftData?.nft?.recipient}`}>{nftData?.nft?.recipient}</Link>
+                        </Typography>
+                        <Typography variant="subtitle1" mb={2}>
+                            Owner: <Link href={`/user/${nftData?.owner?.address}`}>{nftData?.owner?.address}</Link>
+                        </Typography>
+                        <Typography variant="subtitle2" mb={2}>Views: {nftData?.viewsCount}</Typography>
+                        <Typography variant="subtitle2" mb={2}>Likes: {nftData?.likesCount}</Typography>
+                        <Typography variant="subtitle1" mb={2}>{nftData?.nft.tokenURI?.description}</Typography>
                         <Typography variant="button">{nftData?.nft.tokenURI?.hashtags}</Typography>
                         <Box mt={3}>
                             <Button variant="contained" color="error" onClick={openBanModal}>Ban</Button>
@@ -69,13 +93,14 @@ const NftPage = memo(() => {
                         Are you sure you want to ban this NFT?
                     </Typography>
                     <FormGroup>
-                        <FormControlLabel control={
-                            <Checkbox
-                                checked={isBanConfirmed}
-                                onClick={() => setIsBanConfirmed(!isBanConfirmed)}
-                            />
-                        }
-                        label="I confirm."
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isBanConfirmed}
+                                    onClick={() => setIsBanConfirmed(!isBanConfirmed)}
+                                />
+                            }
+                            label="I confirm."
                         />
                         <Box mt={3}>
                             <Button variant="contained" color="error" onClick={confirmBan} disabled={!isBanConfirmed}>Ban</Button>
