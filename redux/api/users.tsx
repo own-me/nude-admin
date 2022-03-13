@@ -4,6 +4,8 @@ interface User {
     id?: string;
     address?: string;
     name?: string;
+    email?: string;
+    emailVerified?: boolean;
     birthDate?: string;
     registrationDate?: string;
     lastLoginDate?: string;

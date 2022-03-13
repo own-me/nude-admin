@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Chip, FormControlLabel, FormGroup, Grid, Modal, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Chip, FormControlLabel, FormGroup, Grid, Link, Modal, Stack, Typography } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useBanUserMutation } from "../../redux/api/users";
@@ -33,35 +33,56 @@ const UserPage = memo(() => {
             <Box sx={{
                 color: "text.primary"
             }}>
-                <Grid container spacing={2}>
-                    <Grid item xs={4}>
-                        <Box>
-                            <img src={userData?.profileImageUrl} style={{
-                                width: "100%"
-                            }} />
+                <Grid container>
+                    <Grid item xs={4} mt={3}>
+                        <img src={userData?.profileImageUrl} style={{
+                            width: "100%"
+                        }} />
+                        <Box m={2}>
+                            <Button variant="contained" color="error" onClick={openBanModal}>Takedown Profile Image</Button>
                         </Box>
                     </Grid>
                     <Grid item xs={8} mt={3}>
-                        <Typography variant="h2">{userData?.name}</Typography>
-                        <Typography variant="button" mr={2}>{userData?.address}</Typography>
-                        <Chip
-                            icon={<OpenInNewIcon />}
-                            label="Polyscan"
-                            component="a"
-                            href={`https://mumbai.polygonscan.com/address/${userData?.address}`}
-                            target="_blank"
-                            clickable
-                        />
-                        <Box mt={3} mb={3}>
-                            <Chip
-                                label={userData?.banResults?.length > 0 ? "BANNED" : "Good Standing"}
-                                color={userData?.banResults?.length > 0 ? "error" : "success"}
-                                variant="outlined"
-                            />
+                        <Box>
+                            <img src={userData?.bannerImageUrl} style={{
+                                width: "100%",
+                                height: 250
+                            }} />
                         </Box>
-                        <Typography variant="subtitle1">{userData?.bio}</Typography>
-                        <Box mt={3}>
-                            <Button variant="contained" color="error" onClick={openBanModal}>Ban</Button>
+                        <Box p={2}>
+                            <Typography variant="h2">{userData?.name}</Typography>
+                            <Typography variant="subtitle1">
+                                {userData?.address}
+                            </Typography>
+                            <Stack direction="row" spacing={1} mt={3} mb={3}>
+                                <Chip
+                                    icon={<OpenInNewIcon />}
+                                    label="Polyscan"
+                                    component="a"
+                                    href={`https://mumbai.polygonscan.com/address/${userData?.address}`}
+                                    target="_blank"
+                                    clickable
+                                />
+                                <Chip
+                                    label={userData?.banResults?.length > 0 ? "BANNED" : "Good Standing"}
+                                    color={userData?.banResults?.length > 0 ? "error" : "success"}
+                                    variant="outlined"
+                                />
+                            </Stack>
+                            <Typography variant="subtitle2" mb={2}>Registration Date: {new Date(userData?.registrationDate).toLocaleString()}</Typography>
+                            <Typography variant="subtitle2" mb={2}>Last Login Date: {userData?.lastLoginDate ? new Date(userData?.lastLoginDate).toLocaleString() : "unknown"}</Typography>
+                            <Typography variant="subtitle2" mb={2}>Email: {userData?.email}</Typography>
+                            <Typography variant="body1" mb={2}>
+                                Link: {userData?.link && <Link href={userData?.link} target="_blank">{userData?.link}</Link>}
+                            </Typography>
+                            <Typography variant="body1">{userData?.bio}</Typography>
+                            <Box mt={3}>
+                                {
+                                    userData?.banResults?.length > 0 ?
+                                        <Button variant="contained" color="warning" onClick={openBanModal}>Unban</Button> :
+                                        <Button variant="contained" color="error" onClick={openBanModal}>Ban</Button>
+                                }
+                            </Box>
                         </Box>
                     </Grid>
                 </Grid>
@@ -86,13 +107,14 @@ const UserPage = memo(() => {
                         Are you sure you want to ban: {userData?.name}?
                     </Typography>
                     <FormGroup>
-                        <FormControlLabel control={
-                            <Checkbox
-                                checked={isBanConfirmed}
-                                onClick={() => setIsBanConfirmed(!isBanConfirmed)}
-                            />
-                        }
-                        label="I confirm."
+                        <FormControlLabel
+                            label="I confirm."
+                            control={
+                                <Checkbox
+                                    checked={isBanConfirmed}
+                                    onClick={() => setIsBanConfirmed(!isBanConfirmed)}
+                                />
+                            }
                         />
                         <Box mt={3}>
                             <Button variant="contained" color="error" onClick={confirmBan} disabled={!isBanConfirmed}>Ban</Button>
