@@ -1,31 +1,56 @@
-import { Box, Button, Checkbox, Chip, FormControlLabel, FormGroup, Grid, Modal, Stack, Typography, Link } from "@mui/material";
-import React, { memo, useCallback, useMemo, useState } from "react";
+import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useBanNftMutation, useGetNftQuery } from "../../redux/api/nft";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import { Box, Button, Chip, Grid, Stack, Typography, Link } from "@mui/material";
+import { useBanNftMutation, useGetNftQuery, useUnbanNftMutation } from "../../redux/api/nft";
+import ConfirmModal from "../../components/ConfirmModal";
 
 const NftPage = memo(() => {
     const location = useLocation();
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
-    const [isBanConfirmed, setIsBanConfirmed] = useState<boolean>(false);
+    const [isBanModalOpen, setBanModalOpen] = useState<boolean>(false);
+    const [isUnbanModalOpen, setUnbanModalOpen] = useState<boolean>(false);
 
     const tokenId = useMemo(() => Number(location?.pathname?.split("/")[2]), [location]);
 
     const {
-        data: nftData
+        data: nftData,
+        refetch: refetchNftData
     } = useGetNftQuery({ tokenId });
 
-    const [postBanNft, {
-        isSuccess: isPostBanNftSuccess,
-    }] = useBanNftMutation();
+    const [postBanNft, { isSuccess: isBanNftSuccess, isError: isBanNftError}] = useBanNftMutation();
+    const [postUnbanNft, { isSuccess: isUnbanNftSuccess, isError: isUnbanNftError}] = useUnbanNftMutation();
+
+    useEffect(() => {
+        if (isBanNftSuccess || isUnbanNftSuccess || isBanNftError || isUnbanNftError) {
+            refetchNftData();
+            setBanModalOpen(false);
+            setUnbanModalOpen(false);
+        }
+    }, [isBanNftError, isBanNftSuccess, isUnbanNftError, isUnbanNftSuccess, refetchNftData]);
 
     const openBanModal = useCallback(() => {
-        setIsModalOpen(true);
+        setBanModalOpen(true);
+    }, []);
+
+    const openUnbanModal = useCallback(() => {
+        setUnbanModalOpen(true);
+    }, []);
+
+    const cancelBan = useCallback(() => {
+        setBanModalOpen(false);
+    }, []);
+
+    const cancelUnban = useCallback(() => {
+        setUnbanModalOpen(false);
     }, []);
 
     const confirmBan = useCallback(() => {
         postBanNft({ tokenId, reason: "banned" });
     }, [postBanNft, tokenId]);
+
+    const confirmUnban = useCallback(() => {
+        postUnbanNft({ tokenId, reason: "unbanned" });
+    }, [postUnbanNft, tokenId]);
 
     return (
         <>
@@ -68,46 +93,27 @@ const NftPage = memo(() => {
                         <Typography variant="subtitle1" mb={2}>{nftData?.nft.tokenURI?.description}</Typography>
                         <Typography variant="button">{nftData?.nft.tokenURI?.hashtags}</Typography>
                         <Box mt={3}>
-                            <Button variant="contained" color="error" onClick={openBanModal}>Ban</Button>
+                            {
+                                nftData?.banRecords?.length > 0 ?
+                                    <Button variant="contained" color="warning" onClick={openUnbanModal}>Unban</Button> :
+                                    <Button variant="contained" color="error" onClick={openBanModal}>Ban</Button>
+                            }
                         </Box>
                     </Grid>
                 </Grid>
             </Box>
-            <Modal
-                open={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-            >
-                <Box sx={{
-                    position: "absolute",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    width: 400,
-                    bgcolor: "background.paper",
-                    border: "2px solid #000",
-                    color: "text.primary",
-                    boxShadow: 24,
-                    p: 4
-                }}>
-                    <Typography variant="h6" component="h2">
-                        Are you sure you want to ban this NFT?
-                    </Typography>
-                    <FormGroup>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={isBanConfirmed}
-                                    onClick={() => setIsBanConfirmed(!isBanConfirmed)}
-                                />
-                            }
-                            label="I confirm."
-                        />
-                        <Box mt={3}>
-                            <Button variant="contained" color="error" onClick={confirmBan} disabled={!isBanConfirmed}>Ban</Button>
-                        </Box>
-                    </FormGroup>
-                </Box>
-            </Modal>
+            <ConfirmModal
+                isOpen={isBanModalOpen}
+                title="Do you want to ban this NFT?"
+                onClose={cancelBan}
+                onConfirm={confirmBan}
+            />
+            <ConfirmModal
+                isOpen={isUnbanModalOpen}
+                title="Do you want to unban this NFT?"
+                onClose={cancelUnban}
+                onConfirm={confirmUnban}
+            />
         </>
     );
 });

@@ -82,6 +82,19 @@ export const nftApi = createApi({
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
+        }),
+        unbanNft: builder.mutation<null, BanNftRequest>({
+            query: ({ tokenId, reason }) => ({
+                url: "nft/admin/unban",
+                method: "POST",
+                body: {
+                    tokenId,
+                    reason
+                },
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
         })
     })
 });
@@ -89,5 +102,6 @@ export const nftApi = createApi({
 export const {
     useGetNftReportsQuery,
     useGetNftQuery,
-    useBanNftMutation
+    useBanNftMutation,
+    useUnbanNftMutation
 } = nftApi;
