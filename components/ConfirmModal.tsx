@@ -4,11 +4,12 @@ import React, { memo, useCallback, useEffect, useState } from "react";
 interface ConfirmModalProps {
     isOpen: boolean;
     title: string;
+    buttonLabel: string;
     onClose: () => void;
     onConfirm: () => void;
 }
 
-const ConfirmModal = memo(({ isOpen, title, onClose, onConfirm }: ConfirmModalProps) => {
+const ConfirmModal = memo(({ isOpen, title, buttonLabel, onClose, onConfirm }: ConfirmModalProps) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(isOpen);
     const [isConfirmed, setConfirmed] = useState<boolean>(false);
 
@@ -54,7 +55,7 @@ const ConfirmModal = memo(({ isOpen, title, onClose, onConfirm }: ConfirmModalPr
                                 onClick={() => setConfirmed(!isConfirmed)}
                             />
                         }
-                        label="I confirm."
+                        label={"I confirm."}
                     />
                     <Box mt={3}>
                         <Button
@@ -63,7 +64,7 @@ const ConfirmModal = memo(({ isOpen, title, onClose, onConfirm }: ConfirmModalPr
                             onClick={handleConfirm}
                             disabled={!isConfirmed}
                         >
-                            Ban
+                            {buttonLabel}
                         </Button>
                     </Box>
                 </FormGroup>

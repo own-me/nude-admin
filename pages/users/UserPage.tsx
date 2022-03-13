@@ -115,12 +115,14 @@ const UserPage = memo(() => {
             <ConfirmModal
                 isOpen={isBanModalOpen}
                 title={`Are you sure you want to ban: ${userData?.name}?`}
+                buttonLabel="Ban"
                 onClose={cancelBan}
                 onConfirm={confirmBan}
             />
             <ConfirmModal
                 isOpen={isUnbanModalOpen}
-                title="Do you want to unban this NFT?"
+                title={`Are you sure you want to unban: ${userData?.name}?`}
+                buttonLabel="Unban"
                 onClose={cancelUnban}
                 onConfirm={confirmUnban}
             />

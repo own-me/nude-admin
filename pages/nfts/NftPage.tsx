@@ -105,12 +105,14 @@ const NftPage = memo(() => {
             <ConfirmModal
                 isOpen={isBanModalOpen}
                 title="Do you want to ban this NFT?"
+                buttonLabel="Ban"
                 onClose={cancelBan}
                 onConfirm={confirmBan}
             />
             <ConfirmModal
                 isOpen={isUnbanModalOpen}
                 title="Do you want to unban this NFT?"
+                buttonLabel="Unban"
                 onClose={cancelUnban}
                 onConfirm={confirmUnban}
             />
