@@ -20,13 +20,13 @@ const GenericTable = memo(({ headers, rows, onRowClick }: GenericTableProps) => 
             <Table aria-label="simple table">
                 <TableHead>
                     <TableRow>
-                        {headers.map((header, index) => {
+                        {headers && headers.length > 0 && headers.map((header, index) => {
                             return <TableCell align="right" key={index}>{header}</TableCell>;
                         })}
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rows.map((row, index) => (
+                    {rows && rows.length > 0 && rows.map((row, index) => (
                         <TableRow key={index} onClick={() => onRowClick(row)} hover>
                             {
                                 Object.values(row).map((value, index) => {

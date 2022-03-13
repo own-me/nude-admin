@@ -1,35 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-interface GetNftReportsRequest {
-    page: number;
-}
-
-interface GetNftRequest {
-    tokenId: number;
-}
-
-interface BanNftRequest {
-    tokenId: number;
-    reason: string;
-}
-
-interface UnbanNftRequest {
-    tokenId: number;
-}
-
 export interface TokenURIInterface {
     title: string;
     description: string;
     image: string;
     hashtags: string[];
-}
-
-interface NftBanRecord {
-    id: number;
-    tokenId: number;
-    reason: string;
-    adminAddress: string;
-    dateBanned: string;
 }
 
 export interface NftInterface {
@@ -44,6 +19,22 @@ export interface NftInterface {
     price: string;
 }
 
+export interface NftBanRecord {
+    id: number;
+    tokenId: number;
+    reason: string;
+    adminAddress: string;
+    dateBanned: string;
+}
+
+interface NftReport {
+    id: number;
+    tokenId: number;
+    reason: string;
+    reporterAddress: string;
+    dateReported: string;
+}
+
 interface GetNftResponse {
     nft: NftInterface;
     banRecords?: NftBanRecord[];
@@ -56,16 +47,7 @@ export const nftApi = createApi({
     reducerPath: "nftApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
     endpoints: (builder) => ({
-        getNftReports: builder.query<NftInterface[], GetNftReportsRequest>({
-            query: ({ page }) => ({
-                url: `nft/admin/reports/?page=${page}`,
-                method: "GET",
-                headers: {
-                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
-                }
-            })
-        }),
-        getNft: builder.query<GetNftResponse, GetNftRequest>({
+        getNft: builder.query<GetNftResponse, { tokenId: number }>({
             query: ({ tokenId }) => ({
                 url: `nft/admin/${tokenId}`,
                 method: "GET",
@@ -74,7 +56,33 @@ export const nftApi = createApi({
                 }
             })
         }),
-        banNft: builder.mutation<null, BanNftRequest>({
+        searchNfts: builder.query<NftInterface[], { query: string, page: number }>({
+            query: ({ query, page }) => ({
+                url: "nft/admin/nfts",
+                method: "POST",
+                body: {
+                    query,
+                    page
+                },
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
+        }),
+        searchNftReports: builder.query<NftReport[], { query: string, page: number }>({
+            query: ({ query, page }) => ({
+                url: "nft/admin/reports",
+                method: "POST",
+                body: {
+                    query,
+                    page
+                },
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
+        }),
+        banNft: builder.mutation<null, { tokenId: number, reason: string }>({
             query: ({ tokenId, reason }) => ({
                 url: "nft/admin/ban",
                 method: "POST",
@@ -87,7 +95,7 @@ export const nftApi = createApi({
                 }
             })
         }),
-        unbanNft: builder.mutation<null, UnbanNftRequest>({
+        unbanNft: builder.mutation<null, { tokenId: number }>({
             query: ({ tokenId }) => ({
                 url: "nft/admin/unban",
                 method: "POST",
@@ -103,8 +111,9 @@ export const nftApi = createApi({
 });
 
 export const {
-    useGetNftReportsQuery,
     useGetNftQuery,
+    useSearchNftsQuery,
+    useSearchNftReportsQuery,
     useBanNftMutation,
     useUnbanNftMutation
 } = nftApi;
