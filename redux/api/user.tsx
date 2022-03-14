@@ -24,19 +24,23 @@ export const userApi = createApi({
     reducerPath: "userApi",
     baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
     endpoints: (builder) => ({
-        getUsers: builder.query<User[], null>({
-            query: () => ({
-                url: "user/admin/users",
+        getUser: builder.query<User, { userAddress: string }>({
+            query: ({ userAddress }) => ({
+                url: `user/admin/user/${userAddress}`,
                 method: "GET",
                 headers: {
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
         }),
-        getUser: builder.query<User, { userAddress: string }>({
-            query: ({ userAddress }) => ({
-                url: `user/admin/user/${userAddress}`,
-                method: "GET",
+        searchUsers: builder.query<User[], { query: string, page: number }>({
+            query: ({ query, page }) => ({
+                url: "user/admin/users",
+                method: "POST",
+                body: {
+                    query,
+                    page
+                },
                 headers: {
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
@@ -71,8 +75,8 @@ export const userApi = createApi({
 });
 
 export const {
-    useGetUsersQuery,
     useGetUserQuery,
+    useSearchUsersQuery,
     useBanUserMutation,
     useUnbanUserMutation
 } = userApi;
