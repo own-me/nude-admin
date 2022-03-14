@@ -7,6 +7,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import { shortenAddress } from "../lib/helpers";
 
 interface GenericTableProps {
     headers: string[];
@@ -32,6 +33,9 @@ const GenericTable = memo(({ headers, rows, onRowClick }: GenericTableProps) => 
                                 Object.values(row).map((value, index) => {
                                     if (typeof value === "object") {
                                         return <TableCell key={index}>{JSON.stringify(value)}</TableCell>;
+                                    }
+                                    if (String(value).slice(0, 2) === "0x") {
+                                        return <TableCell key={index}>{shortenAddress(String(value), 12)}</TableCell>;
                                     }
                                     return <TableCell align="right" key={index}>{value}</TableCell>;
                                 })
