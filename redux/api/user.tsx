@@ -70,6 +70,19 @@ export const userApi = createApi({
                     ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
                 }
             })
+        }),
+        takedownProfileImage: builder.mutation<null, { userAddress: string, reason: string }>({
+            query: ({ userAddress, reason }) => ({
+                url: "user/admin/takedown-profile-image",
+                method: "POST",
+                body: {
+                    userAddress,
+                    reason
+                },
+                headers: {
+                    ...(localStorage.getItem("token") && { Authorization: `Bearer ${localStorage.getItem("token")}` })
+                }
+            })
         })
     })
 });
@@ -78,5 +91,6 @@ export const {
     useGetUserQuery,
     useSearchUsersQuery,
     useBanUserMutation,
-    useUnbanUserMutation
+    useUnbanUserMutation,
+    useTakedownProfileImageMutation
 } = userApi;

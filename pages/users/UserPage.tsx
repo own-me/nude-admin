@@ -1,7 +1,7 @@
 import { Box, Button, Chip, Grid, Link, Stack, Typography } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useBanUserMutation, useUnbanUserMutation } from "../../redux/api/user";
+import { useBanUserMutation, useTakedownProfileImageMutation, useUnbanUserMutation } from "../../redux/api/user";
 import { useGetUserQuery } from "../../redux/api/user";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ConfirmModal from "../../components/ConfirmModal";
@@ -10,6 +10,7 @@ const UserPage = memo(() => {
     const location = useLocation();
     const [isBanModalOpen, setBanModalOpen] = useState<boolean>(false);
     const [isUnbanModalOpen, setUnbanModalOpen] = useState<boolean>(false);
+    const [isTakedownProfileImageOpen, setTakedownProfileImageOpen] = useState<boolean>(false);
 
     const userAddress = useMemo(() => location?.pathname?.split("/")[2], [location]);
 
@@ -20,14 +21,16 @@ const UserPage = memo(() => {
 
     const [postBanUser, { isSuccess: isBanUserSuccess, isError: isBanUserError }] = useBanUserMutation();
     const [postUnbanUser, { isSuccess: isUnbanUserSuccess, isError: isUnbanUserError }] = useUnbanUserMutation();
+    const [postTakedownProfileImage, { isSuccess: isTakedownProfileImageSuccess, isError: isTakedownProfileImageError }] = useTakedownProfileImageMutation();
 
     useEffect(() => {
-        if (isBanUserSuccess || isUnbanUserSuccess || isBanUserError || isUnbanUserError) {
+        if (isBanUserSuccess || isUnbanUserSuccess || isTakedownProfileImageSuccess || isBanUserError || isUnbanUserError || isTakedownProfileImageError) {
             refetchUserData();
             setBanModalOpen(false);
             setUnbanModalOpen(false);
+            setTakedownProfileImageOpen(false);
         }
-    }, [isBanUserError, isBanUserSuccess, isUnbanUserError, isUnbanUserSuccess, refetchUserData]);
+    }, [isBanUserError, isBanUserSuccess, isTakedownProfileImageError, isTakedownProfileImageSuccess, isUnbanUserError, isUnbanUserSuccess, refetchUserData]);
 
     const openBanModal = useCallback(() => {
         setBanModalOpen(true);
@@ -37,11 +40,19 @@ const UserPage = memo(() => {
         setUnbanModalOpen(true);
     }, []);
 
+    const openTakedownProfileImage = useCallback(() => {
+        setTakedownProfileImageOpen(true);
+    }, []);
+
     const cancelBan = useCallback(() => {
         setBanModalOpen(false);
     }, []);
 
     const cancelUnban = useCallback(() => {
+        setUnbanModalOpen(false);
+    }, []);
+
+    const cancelTakedownProfileImage = useCallback(() => {
         setUnbanModalOpen(false);
     }, []);
 
@@ -53,6 +64,10 @@ const UserPage = memo(() => {
         postUnbanUser({ userAddress });
     }, [postUnbanUser, userAddress]);
 
+    const confirmTakedownProfileImage = useCallback(() => {
+        postTakedownProfileImage({ userAddress, reason: "bad boi" });
+    }, [postTakedownProfileImage, userAddress]);
+
     return (
         <>
             <Box sx={{
@@ -63,9 +78,11 @@ const UserPage = memo(() => {
                         <img src={userData?.profileImageUrl} style={{
                             width: "100%"
                         }} />
-                        <Box m={2}>
-                            <Button variant="contained" color="error" onClick={openBanModal}>Takedown Profile Image</Button>
-                        </Box>
+                        {
+                            userData?.profileImageUrl && <Box m={2}>
+                                <Button variant="contained" color="error" onClick={openTakedownProfileImage}>Takedown Profile Image</Button>
+                            </Box>
+                        }
                     </Grid>
                     <Grid item xs={8} mt={3}>
                         <Box>
@@ -125,6 +142,13 @@ const UserPage = memo(() => {
                 buttonLabel="Unban"
                 onClose={cancelUnban}
                 onConfirm={confirmUnban}
+            />
+            <ConfirmModal
+                isOpen={isTakedownProfileImageOpen}
+                title={`Are you sure you want to takedown ${userData?.name}'s profile image?`}
+                buttonLabel="Takedown"
+                onClose={cancelTakedownProfileImage}
+                onConfirm={confirmTakedownProfileImage}
             />
         </>
     );
