@@ -22,7 +22,7 @@ export interface User {
 
 export const userApi = createApi({
     reducerPath: "userApi",
-    baseQuery: fetchBaseQuery({ baseUrl: "http://localhost:3000/" }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.IS_DEV === "true" ? "http://localhost:3000/" : "https://api.ownme.io/" }),
     endpoints: (builder) => ({
         getUser: builder.query<User, { userAddress: string }>({
             query: ({ userAddress }) => ({
