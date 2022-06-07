@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useAppDispatch } from "../redux/hooks";
-import { Nude_ADDRESS } from "../lib/helpers";
 import { Nude__factory } from "../typechain/factories/Nude__factory";
 
 export default function useWallet() {
@@ -14,32 +13,14 @@ export default function useWallet() {
     const [signer, setSigner] = useState(null);
 
     useEffect(() => {
-        if (!provider) {
-            console.log("Getting new wallet provider...");
+        console.log("Getting new wallet provider...");
+        if (!provider && window.ethereum) {
             const provider = new ethers.providers.Web3Provider(window.ethereum);
             setProvider(provider);
+        } else {
+            console.log("No wallet provider found");
         }
     }, [provider]);
-
-    useEffect(() => {
-        async function getAddress() {
-            const address = await signer.getAddress();
-            setAddress(address);
-        }
-        if (signer) {
-            getAddress();
-        }
-    }, [dispatch, signer]);
-
-    useEffect(() => {
-        async function getNetwork() {
-            const network = await provider.getNetwork();
-            setNetwork(network);
-        }
-        if (provider) {
-            getNetwork();
-        }
-    }, [dispatch, provider]);
 
     useEffect(() => {
         async function getSigner() {
@@ -51,29 +32,54 @@ export default function useWallet() {
     }, [provider]);
 
     useEffect(() => {
+        async function getNetwork() {
+            const network = await provider.getNetwork();
+            if (network) {
+                setNetwork(network);
+            }
+        }
+        if (provider) {
+            getNetwork();
+        }
+    }, [dispatch, provider]);
+
+    useEffect(() => {
+        async function getAddress() {
+            const address = await signer.getAddress();
+            const checkSumAddress = ethers.utils.getAddress(address);
+            setAddress(checkSumAddress);
+        }
+        if (signer && window?.ethereum?.selectedAddress) {
+            getAddress();
+        }
+    }, [dispatch, signer]);
+
+    useEffect(() => {
         async function getBalance() {
             await window.ethereum.request({ method: "eth_requestAccounts" });
-            const nudeContract = Nude__factory.connect(Nude_ADDRESS, provider);
+            const nudeContract = Nude__factory.connect(process.env.NUDE_ADDRESS, provider);
             const balance = await nudeContract.balanceOf(address);
             setBalance(balance);
         }
-        if (network && provider) {
+        if (network && provider && address) {
             getBalance();
         }
     }, [address, dispatch, network, provider]);
 
     useEffect(() => {
-        window.ethereum.on("accountsChanged", (accounts: Array<string>) => {
-            if (!address) {
-                setAddress(accounts[0]);
-            } else {
-                setBalance(null);
-                setAddress("");
-                setNetwork(null);
-                setProvider(null);
-                setSigner(null);
-            }
-        });
+        if (window.ethereum) {
+            window.ethereum.on("accountsChanged", (accounts: Array<string>) => {
+                if (!address) {
+                    setAddress(ethers.utils.getAddress(accounts[0]));
+                } else {
+                    setBalance(null);
+                    setAddress("");
+                    setNetwork(null);
+                    setProvider(null);
+                    setSigner(null);
+                }
+            });
+        }
     }, [address, dispatch]);
 
     return { balance, address, network, provider, signer };

@@ -63,8 +63,6 @@ module.exports = {
         new ESLintPlugin({
             extensions: ["js", "jsx", "ts", "tsx"],
         }),
-        new Dotenv({
-            path: ".dev.env"
-        })
+        new Dotenv()
     ]
 };
