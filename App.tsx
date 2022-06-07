@@ -1,6 +1,6 @@
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -15,11 +15,11 @@ const theme = createTheme({
 function App() {
     return (
         <Provider store={store}>
-            <HashRouter>
+            <BrowserRouter>
                 <ThemeProvider theme={theme}>
                     <Main />
                 </ThemeProvider>
-            </HashRouter>
+            </BrowserRouter>
         </Provider>
     );
 }
