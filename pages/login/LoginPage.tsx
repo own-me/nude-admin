@@ -1,6 +1,6 @@
 import React, { memo } from "react";
 import { Box, Typography } from "@mui/material";
-import MetamaskButton from "../../components/MetaMaskButton";
+import MetamaskButton from "../../components/MetamaskButton";
 
 export const LoginPage = memo(() => {
     return (
