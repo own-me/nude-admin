@@ -2,11 +2,13 @@ import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useAppDispatch } from "../redux/hooks";
 import { Nude__factory } from "../typechain/factories/Nude__factory";
+import { setIsLoggedIn } from "../redux/slices/app";
 
 export default function useWallet() {
     const dispatch = useAppDispatch();
 
-    const [balance, setBalance] = useState<BigNumber>(null);
+    const [nudeBalance, setNudeBalance] = useState<BigNumber>(null);
+    const [maticBalance, setMaticBalance] = useState<BigNumber>(null);
     const [address, setAddress] = useState<string>("");
     const [network, setNetwork] = useState(null);
     const [provider, setProvider] = useState(null);
@@ -49,7 +51,7 @@ export default function useWallet() {
             const checkSumAddress = ethers.utils.getAddress(address);
             setAddress(checkSumAddress);
         }
-        if (signer && window?.ethereum?.selectedAddress) {
+        if (signer) {
             getAddress();
         }
     }, [dispatch, signer]);
@@ -58,13 +60,15 @@ export default function useWallet() {
         async function getBalance() {
             await window.ethereum.request({ method: "eth_requestAccounts" });
             const nudeContract = Nude__factory.connect(process.env.NUDE_ADDRESS, provider);
-            const balance = await nudeContract.balanceOf(address);
-            setBalance(balance);
+            const nudeBalance = await nudeContract.balanceOf(address);
+            const maticBalance = await signer.getBalance();
+            setNudeBalance(nudeBalance);
+            setMaticBalance(maticBalance);
         }
         if (network && provider && address) {
             getBalance();
         }
-    }, [address, dispatch, network, provider]);
+    }, [address, dispatch, network, provider, signer]);
 
     useEffect(() => {
         if (window.ethereum) {
@@ -72,15 +76,26 @@ export default function useWallet() {
                 if (!address) {
                     setAddress(ethers.utils.getAddress(accounts[0]));
                 } else {
-                    setBalance(null);
+                    setNudeBalance(null);
+                    setMaticBalance(null);
                     setAddress("");
                     setNetwork(null);
                     setProvider(null);
                     setSigner(null);
+                    dispatch(setIsLoggedIn(false));
+                }
+            });
+            window.ethereum.on("chainChanged", async (chainId) => {
+                if (provider) {
+                    setProvider(null);
+                    setSigner(null);
+                    setNudeBalance(null);
+                    setMaticBalance(null);
+                    setNetwork(null);
                 }
             });
         }
-    }, [address, dispatch]);
+    }, [address, dispatch, provider]);
 
-    return { balance, address, network, provider, signer };
+    return { nudeBalance, maticBalance, address, network, provider, signer };
 }

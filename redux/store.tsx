@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import appReducer from "./slices/app";
+import userReducer from "./slices/user";
 import { loginApi } from "./api/login";
 import { authApi } from "./api/auth";
 import { nftApi } from "./api/nft";
@@ -10,6 +11,7 @@ import { postsApi } from "./api/posts";
 export const store = configureStore({
     reducer: {
         app: appReducer,
+        user: userReducer,
         [loginApi.reducerPath]: loginApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
         [nftApi.reducerPath]: nftApi.reducer,
