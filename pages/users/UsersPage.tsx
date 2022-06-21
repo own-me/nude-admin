@@ -1,7 +1,7 @@
 import GenericTable from "../../components/GenericTable";
 import React, { memo, useCallback, useState, ChangeEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSearchUsersQuery, User } from "../../redux/api/user";
+import { useSearchUsersQuery, User } from "../../api/user";
 import { Box, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Tab, Tabs } from "@mui/material";
 import { Search } from "@mui/icons-material";
 

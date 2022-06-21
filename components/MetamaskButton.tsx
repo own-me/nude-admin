@@ -1,11 +1,11 @@
 import React, { memo, useCallback, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../redux/hooks";
-import { usePostLoginMutation } from "../redux/api/login";
-import { usePostAuthMutation } from "../redux/api/auth";
+import { usePostLoginMutation } from "../api/login";
+import { usePostAuthMutation } from "../api/auth";
 import useWallet from "../hooks/useWallet";
 import metamaskLogo from "../media/metamask.svg";
 import { Box, Button, Typography } from "@mui/material";
-import { setIsLoggedIn } from "../redux/slices/app";
+import { setUserLoggedIn } from "../redux/slices/user";
 import { useLocation, useNavigate } from "react-router-dom";
 import { setUserToken } from "../redux/slices/user";
 import { ethers } from "ethers";
@@ -85,7 +85,7 @@ export const MetamaskButton = memo(() => {
                 });
             } else {
                 dispatch(setUserToken(window.localStorage.getItem("token")));
-                dispatch(setIsLoggedIn(true));
+                dispatch(setUserLoggedIn(true));
             }
         }
     }, [postLoginData, isPostLoginSuccess, signer, postAuth, address, dispatch]);
@@ -106,14 +106,22 @@ export const MetamaskButton = memo(() => {
 
     useEffect(() => {
         if (loggedIn) {
-            navigate(location?.state?.from || "/");
+            navigate(location?.state?.from || "/nfts");
         }
     }, [location?.state?.from, loggedIn, navigate]);
 
     return (
         <Box onSubmit={handleSubmit}>
             <Typography>{isPostLoginError && postLoginError?.data?.error}</Typography>
-            <Button variant="outlined" onClick={handleSubmit}><img src={metamaskLogo} /></Button>
+            <Button 
+                sx={{
+                    backgroundColor: "text.primary",
+                }}
+                variant="outlined" 
+                onClick={handleSubmit}
+            >
+                <img src={metamaskLogo} />
+            </Button>
         </Box>
     );
 });

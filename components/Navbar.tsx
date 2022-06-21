@@ -23,13 +23,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
     {
-        label: "Home",
-        path: "/",
-        children: [
-            "/login",
-        ]
-    },
-    {
         label: "NFTs",
         path: "/nfts",
         children: [

@@ -1,6 +1,7 @@
 import React, { memo } from "react";
 import { Box, Typography } from "@mui/material";
 import MetamaskButton from "../../components/MetamaskButton";
+import logo from "../../media/own-me-logo.svg";
 
 export const LoginPage = memo(() => {
     return (
@@ -11,10 +12,15 @@ export const LoginPage = memo(() => {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "center",
-            marginTop: "2rem"
+            marginTop: "2rem",
+            color: "text.primary"
         }}>
+            <img src={logo} />
+            <br />
+            <br />
+            <br />
             <Typography variant="h4">Login</Typography>
-            <hr />
+            <br />
             <MetamaskButton />
         </Box>
     );

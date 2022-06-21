@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import { useAppDispatch } from "../redux/hooks";
 import { Nude__factory } from "../typechain/factories/Nude__factory";
-import { setIsLoggedIn } from "../redux/slices/app";
+import { setUserLoggedIn } from "../redux/slices/user";
 
 export default function useWallet() {
     const dispatch = useAppDispatch();
@@ -82,7 +82,7 @@ export default function useWallet() {
                     setNetwork(null);
                     setProvider(null);
                     setSigner(null);
-                    dispatch(setIsLoggedIn(false));
+                    dispatch(setUserLoggedIn(false));
                 }
             });
             window.ethereum.on("chainChanged", async (chainId) => {

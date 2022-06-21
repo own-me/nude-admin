@@ -11,33 +11,36 @@ import PostsPage from "./pages/posts/PostsPage";
 import PostPage from "./pages/posts/PostPage";
 
 export default function Main() {
-    const isLoggedIn = useAppSelector(state => state.app.isLoggedIn);
+    const { loggedIn } = useAppSelector(state => state.user);
     const location = useLocation();
 
-    console.log("isLoggedIn", isLoggedIn);
+    console.log("loggedIn", loggedIn);
 
     return (
         <div id="main-container">
-            <Navbar />
+            {loggedIn && <Navbar />}
             <Routes>
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/" element={
+                    loggedIn ? <NftsPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                } />
                 <Route path="/nfts" element={
-                    isLoggedIn ? <NftsPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                    loggedIn ? <NftsPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
                 <Route path="/nft/:tokenId" element={
-                    isLoggedIn ? <NftPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                    loggedIn ? <NftPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
                 <Route path="/users" element={
-                    isLoggedIn ? <UsersPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                    loggedIn ? <UsersPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
                 <Route path="/user/:userAddress" element={
-                    isLoggedIn ? <UserPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                    loggedIn ? <UserPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
                 <Route path="/posts" element={
-                    isLoggedIn ? <PostsPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                    loggedIn ? <PostsPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
                 <Route path="/post/:postId" element={
-                    isLoggedIn ? <PostPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
+                    loggedIn ? <PostPage /> : <Navigate to="/login" state={{ from: location }} replace={true} />
                 } />
             </Routes>
         </div>

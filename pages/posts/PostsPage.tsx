@@ -1,6 +1,6 @@
 import GenericTable from "../../components/GenericTable";
 import React, { memo, useCallback } from "react";
-import { useGetPostsQuery } from "../../redux/api/posts";
+import { useGetPostsQuery } from "../../api/posts";
 import { useNavigate } from "react-router-dom";
 
 const PostsPage = memo(() => {
