@@ -2,7 +2,7 @@ import React, { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
 import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import { Box, Button, Chip, Grid, Stack, Typography, Link } from "@mui/material";
-import { useBanNftMutation, useGetNftQuery, useUnbanNftMutation } from "../../redux/api/nft";
+import { useBanNftMutation, useGetNftQuery, useUnbanNftMutation } from "../../api/nft";
 import ConfirmModal from "../../components/ConfirmModal";
 
 const NftPage = memo(() => {

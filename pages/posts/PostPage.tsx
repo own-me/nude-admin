@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, FormControlLabel, FormGroup, Grid, Modal, Typography } from "@mui/material";
 import React, { memo, useCallback, useMemo, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { useBanNftMutation, useGetNftQuery } from "../../redux/api/nft";
+import { useBanNftMutation, useGetNftQuery } from "../../api/nft";
 
 const PostPage = memo(() => {
     const location = useLocation();

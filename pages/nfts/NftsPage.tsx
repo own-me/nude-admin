@@ -1,6 +1,6 @@
 import GenericTable from "../../components/GenericTable";
 import React, { memo, useCallback, useState, ChangeEvent } from "react";
-import { NftBanRecord, NftInterface, useSearchNftReportsQuery, useSearchNftsQuery } from "../../redux/api/nft";
+import { NftBanRecord, NftInterface, useSearchNftReportsQuery, useSearchNftsQuery } from "../../api/nft";
 import { useNavigate } from "react-router-dom";
 import { Box, Tab, Tabs, FormControl, InputLabel, OutlinedInput, InputAdornment, IconButton } from "@mui/material";
 import { Search } from "@mui/icons-material";
