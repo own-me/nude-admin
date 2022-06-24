@@ -53,7 +53,7 @@ export const MetamaskButton = memo(() => {
                             {
                                 chainId: ethers.utils.hexValue(NETWORKS.polygonMumbai.chainId),
                                 chainName: "Mumbai",
-                                rpcUrls: ["https://rpc-mumbai.matic.today"],
+                                rpcUrls: ["https://rpc-mumbai.maticvigil.com"],
                                 nativeCurrency: {
                                     name: "Matic",
                                     symbol: "MATIC",
