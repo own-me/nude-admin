@@ -1,6 +1,8 @@
 # admin-frontend
 Custom admin back office frontend for Own Me to handle user moderation, verification and safety.
 
+> Project is dead. We had fun, but failed the business aspect.
+
 ## Join our Community
 
 ![Navbar](https://user-images.githubusercontent.com/27584221/137842947-f80ab90a-cbba-4382-b729-dfb94e0e32f0.png)
